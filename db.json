@@ -1,0 +1,92 @@
+{
+  "users": [
+    {
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "phone": "123-456-7890",
+      "address": "123 Main St, Cityville",
+      "id": 1,
+      "status": "active"
+    },
+    {
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "phone": "987-654-3210",
+      "address": "456 Oak St, Townsville",
+      "id": 2,
+      "status": "inactive"
+    },
+    {
+      "name": "Alice Johnson",
+      "email": "alice.johnson@example.com",
+      "phone": "555-123-4567",
+      "address": "789 Elm St, Villageland",
+      "id": 3,
+      "status": "active"
+    },
+    {
+      "name": "Bob Williams",
+      "email": "bob.williams@example.com",
+      "phone": "111-222-3333",
+      "address": "101 Pine St, Hamletville",
+      "id": 4,
+      "status": "inactive"
+    },
+    {
+      "name": "Eva Davis",
+      "email": "eva.davis@example.com",
+      "phone": "444-555-6666",
+      "address": "202 Cedar St, Boroughburg",
+      "id": 5,
+      "status": "active"
+    },
+    {
+      "name": "Charlie Brown",
+      "email": "charlie.brown@example.com",
+      "phone": "777-888-9999",
+      "address": "303 Maple St, Metropolis",
+      "id": 6,
+      "status": "inactive"
+    },
+    {
+      "name": "Grace Miller",
+      "email": "grace.miller@example.com",
+      "phone": "666-999-8888",
+      "address": "404 Birch St, Townsville",
+      "id": 7,
+      "status": "active"
+    },
+    {
+      "name": "Daniel Lee",
+      "email": "daniel.lee@example.com",
+      "phone": "123-789-4560",
+      "address": "505 Walnut St, Cityville",
+      "id": 8,
+      "status": "inactive"
+    },
+    {
+      "name": "Olivia Clark",
+      "email": "olivia.clark@example.com",
+      "phone": "222-333-4444",
+      "address": "606 Spruce St, Villageland",
+      "id": 9,
+      "status": "active"
+    },
+    {
+      "name": "Max Turner",
+      "email": "max.turner@example.com",
+      "phone": "999-111-2222",
+      "address": "707 Fir St, Hamletville",
+      "id": 10,
+      "status": "inactive"
+    },
+    {
+      "name": "Sophia White",
+      "email": "sophia.white@example.com",
+      "phone": "888-222-1111",
+      "address": "808 Pine St, Boroughburg",
+      "id": 11,
+      "status": "active"
+    }
+  ]
+}
