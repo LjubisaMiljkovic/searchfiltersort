@@ -8,42 +8,72 @@ import {
   MDBCol,
   MDBContainer,
   MDBBtn,
-  MDBBtnGroup } from "mdb-react-ui-kit";
+  MDBBtnGroup,
+  MDBPagination,
+MDBPaginationItem,
+MDBPaginationLink } from "mdb-react-ui-kit";
 import './App.css';
 
 function App() {
   const[data, setData] = useState([]);
   const[value, setValue] = useState("");
   const[sortValue, setSortValue] = useState("");
+  const[currentPage, setCurentPage] = useState(0);
+  const[pageLimit] = useState(4);
+  const[sortFilterValue, setSortFilterValue]= useState("");
+  const[operation, setOperation]= useState("");
 
   const sortOptions =["name", "address", "email", "phone", "status"];
 
   useEffect(()=>{
-    loadUsersData();
+    loadUsersData(0,4,0);
   },[]);
 
-  const loadUsersData = async() =>{
-    return await axios
-    .get("http://localhost:5000/users")
-    .then((response) => setData(response.data))
-    .catch((err) => console.log(err))
-  }
-
+  // const loadUsersData = async() =>{
+  //   return await axios
+  //   .get("http://localhost:5000/users")
+  //   .then((response) => setData(response.data))
+  //   .catch((err) => console.log(err))
+  // }
+  const loadUsersData = async(start, end, increase, optType=null, filterOrSortValue) =>{
+    switch (optType) {
+      case "search":
+          setOperation(optType);
+          setSortValue("");
+          return await axios
+          .get(`http://localhost:5000/users?name=${value}&_start=${start}&_end=${end}`)
+          .then((res) => {
+            setData(res.data);
+            setValue("");
+      })
+      .catch((err) => console.log(err));
+      default:
+        return await axios
+        .get(`http://localhost:5000/users?_start=${start}&_end=${end}`)
+        .then((response) => {
+            setData(response.data);
+              setCurentPage(currentPage + increase)
+          })
+        .catch((err) => console.log(err))
+      }
+  };
+    
+ 
 
   const handleReset=()=>{
     loadUsersData();
   };
   const handleSearch=async (e)=>{
     e.preventDefault();
-    console.log(value);
-    return await axios
-      .get(`http://localhost:5000/users?q=${value}`)
-      .then((res) => {
+    loadUsersData(0,4,0, "search")
+    // return await axios
+    //   .get(`http://localhost:5000/users?:q=${value}`)
+    //   .then((res) => {
         
-        setData(res.data);
-        setValue("");
-      })
-      .catch((err) => console.log(err));
+    //     setData(res.data);
+    //     setValue("");
+    //   })
+    //   .catch((err) => console.log(err));
   };
 
   const handleSort=async (e)=>{
@@ -51,7 +81,16 @@ function App() {
    setSortValue(value)
     
     return await axios
-      .get(`http://localhost:5000/users?_sort=${value}&_order=asc`)
+      .get(`http://localhost:5000/users?_sort=${value}`)
+      .then((res) => {
+        setData(res.data);
+        
+      })
+      .catch((err) => console.log(err));
+  };
+  const handleFilter=async (value)=>{
+    return await axios
+      .get(`http://localhost:5000/users?status=${value}`)
       .then((res) => {
         setData(res.data);
         
@@ -59,7 +98,48 @@ function App() {
       .catch((err) => console.log(err));
   };
 
-
+  const renderPagination =() =>{
+    if(currentPage === 0){
+   return(
+    <MDBPagination className="mb-0">
+    <MDBPaginationItem>
+      <MDBPaginationLink>1</MDBPaginationLink>
+    </MDBPaginationItem>
+    <MDBPaginationItem>
+    <MDBBtn onClick={(()=> loadUsersData(4,8,1, operation))}>Next</MDBBtn>
+    </MDBPaginationItem>
+  </MDBPagination>
+   );
+    } else if(currentPage < pageLimit -1 && data.length === pageLimit){
+      return(
+        <MDBPagination className="mb-0">          <MDBPaginationItem>
+        <MDBBtn onClick={()=> loadUsersData((currentPage - 1) * 4, currentPage * 4, -1, operation)}>
+          Prev
+          </MDBBtn>
+        </MDBPaginationItem>
+        <MDBPaginationItem>
+        <MDBPaginationLink>{currentPage+1}</MDBPaginationLink>
+        </MDBPaginationItem>
+          
+       
+        <MDBPaginationItem>
+        <MDBBtn onClick={()=> loadUsersData((currentPage + 1) * 4,(currentPage+2 )* 4, 1, operation)}>Next</MDBBtn>
+        </MDBPaginationItem>
+      </MDBPagination>
+      );
+    } else {
+   return (
+    <MDBPagination className="mb-0">
+     <MDBPaginationItem>
+    <MDBBtn onClick={()=> loadUsersData(4,8, -1, operation)}>Prev</MDBBtn>
+    </MDBPaginationItem>
+    <MDBPaginationItem>
+      <MDBPaginationLink>{currentPage + 1}</MDBPaginationLink>
+    </MDBPaginationItem>
+  </MDBPagination>
+   );
+  } 
+  };
 
   return (
    <MDBContainer>
@@ -73,7 +153,7 @@ function App() {
     onSubmit={handleSearch}
     >
       <input
-      type="text"
+      type="search"
       className="form-control"
       placeholder="Search Name..."
       value={value}
@@ -128,6 +208,13 @@ function App() {
           </MDBTable>
         </MDBCol>
       </MDBRow>
+      <div
+       style={{
+      margin:"auto",
+      padding:"15px",
+      maxWidth: "250px",
+      alignContent: "center"
+    }}>{renderPagination()}</div>
     </div>
     <MDBRow>
       <MDBCol size="8">
@@ -143,7 +230,14 @@ function App() {
           )}
         </select>
       </MDBCol>
-      <MDBCol size="4"><h2>Filter By Status:</h2></MDBCol>
+      <MDBCol size="4">
+        <h5>Filter By Status:</h5>
+        <MDBBtnGroup>
+          <MDBBtn color="success" onClick={()=> handleFilter("active")}>Active</MDBBtn>
+          <MDBBtn color="danger" style={{margineLeft:"2px"}}
+          onClick={()=> handleFilter("inactive")}>Inactive</MDBBtn>
+        </MDBBtnGroup>
+        </MDBCol>
     </MDBRow>
    </MDBContainer>
   );
